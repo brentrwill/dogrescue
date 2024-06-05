@@ -1,6 +1,5 @@
 package com.promineotech.dogrescue.controller;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,22 +37,33 @@ public class LocationController {
 	}
 
 	/**
-	 * POST = This will update a Location
+	 * Create = This will update a Location
 	 */
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<LocationData> updateLocation(@RequestBody LocationData clone) {
+	public ResponseEntity<LocationData> createLocation(@RequestBody LocationData location) {
 		log.info("Processing POST Request.");
-		LocationData data = locationService.saveLocation(clone);
+		LocationData data = locationService.saveLocation(location);
 		return ResponseEntity.status(HttpStatus.OK).body(data);
 	}
 
 	/**
-	 * Creates a Location
+	 * Updates a Location
 	 */
 	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<LocationData> createLocation(@RequestBody LocationData clone) {
+	public ResponseEntity<LocationData> updateLocation(@RequestBody LocationData location) {
 		log.info("Processing PUT Request.");
-		LocationData data = locationService.saveLocation(clone);
+		LocationData data = locationService.saveLocation(location);
+		return ResponseEntity.status(HttpStatus.OK).body(data);
+	}
+
+	/**
+	 * Updates a Location
+	 */
+	@PutMapping(path = "/name", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<LocationData> updateLocationName(@RequestParam(name = "businessName") String name,
+			@RequestParam(name = "locationId") Long locationId) {
+		log.info("Processing PUT Request.");
+		LocationData data = locationService.updateLocationName(name, locationId);
 		return ResponseEntity.status(HttpStatus.OK).body(data);
 	}
 }

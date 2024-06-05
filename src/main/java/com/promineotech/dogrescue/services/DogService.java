@@ -15,10 +15,18 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class DogService {
-
 	@Autowired
 	private DogDao dogDao;
 	private org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DogService.class);
+
+	public void deleteDog(Long dogId) {
+		try {
+			dogDao.deleteById(dogId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("An error occurred trying to delete dog with Id : " + dogId);
+		}
+	}
 
 	public DogData saveDog(DogData dogData) {
 		Dog dog = findOrCreateDog(dogData);

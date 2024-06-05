@@ -11,10 +11,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import lombok.Builder;
 import lombok.Data;
 
 @Entity
 @Data
+@Builder(toBuilder = true)
 public class Location {
 
 	public Location(Long locationId) {
@@ -22,6 +24,18 @@ public class Location {
 	}
 
 	public Location() {
+	}
+
+	public Location(Long locationId, String businessName, String streetAddress, String city, String state, String zip,
+			String phone, Set<Dog> dogs) {
+		this.locationId = locationId;
+		this.businessName = businessName;
+		this.streetAddress = streetAddress;
+		this.city = city;
+		this.state = state;
+		this.zip = zip;
+		this.phone = phone;
+		this.dogs = dogs;
 	}
 
 	@Id

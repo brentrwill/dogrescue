@@ -29,6 +29,9 @@ public class LocationData {
 		this.dogs = dogs;
 	}
 
+	public LocationData() {
+	}
+
 	public LocationData(Long locationId) {
 		this.locationId = locationId;
 	}
