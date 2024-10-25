@@ -52,7 +52,7 @@ public class Location {
     /**
      * 
      * This is simple One to Many and since we are reading from the Location
-     * to and pulling Dogs, then this will simply use the primary of Location in the 
+     * to and pulling Dogs, then this will simply use the primary key of Location in the 
      * Dog Table.
   	 */
 	// @formatter:on

@@ -29,6 +29,17 @@ public class LocationData {
 		this.dogs = dogs;
 	}
 
+	public LocationData(String businessName, String streetAddress, String city, String state, String zip, String phone,
+			Set<Dog> dogs) {
+		this.businessName = businessName;
+		this.streetAddress = streetAddress;
+		this.city = city;
+		this.state = state;
+		this.zip = zip;
+		this.phone = phone;
+		this.dogs = dogs;
+	}
+
 	public LocationData() {
 	}
 

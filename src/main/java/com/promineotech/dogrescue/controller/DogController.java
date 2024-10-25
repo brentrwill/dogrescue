@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,13 +36,6 @@ public class DogController {
 		log.info("Processing GET Request.");
 		DogData data = dogService.findDogById(dogId);
 		return ResponseEntity.status(HttpStatus.OK).body(data);
-	}
-
-	@DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public String deleteDog(@RequestParam(name = "dogId") Long dogId) {
-		log.info("Processing Delete Request.");
-		dogService.deleteDog(dogId);
-		return "Ok";
 	}
 
 }

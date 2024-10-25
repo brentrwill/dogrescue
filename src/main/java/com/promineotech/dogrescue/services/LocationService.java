@@ -1,10 +1,12 @@
 package com.promineotech.dogrescue.services;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.promineotech.dogrescue.controller.model.LocationData;
@@ -77,6 +79,20 @@ public class LocationService {
 		}
 	}
 
+	public void deleteLocById(long locationId) {
+		try {
+			Optional<Location> results = locationDao.findById(locationId);
+			Location location = results.orElse(null);
+			if (location == null) {
+				throw new NoSuchElementException("No Location existed with the Id : " + locationId);
+			} else {
+				locationDao.deleteById(locationId);
+			}
+		} catch (Exception e) {
+			throw new NoSuchElementException("Error processing location with Id : " + locationId);
+		}
+	}
+
 	private Location findLocationById(long locationId) {
 		Optional<Location> results = locationDao.findById(locationId);
 		Location location = results.orElse(null);
@@ -87,6 +103,10 @@ public class LocationService {
 		}
 	}
 
+	public List<Location> getAllLocations() {
+		return locationDao.findAll(Sort.by(Sort.Direction.ASC, "state"));
+	}
+
 	public Object mergeData(Object src, Object target) throws Exception {
 		Class<?> clazz = src.getClass();
 		for (Field srcField : clazz.getDeclaredFields()) {
@@ -95,12 +115,11 @@ public class LocationService {
 				targetField.setAccessible(true);
 				String localName = srcField.getName();
 				String remoteName = targetField.getName();
-				if (!localName.contains("dog")) {
-					if (localName != null && remoteName != null) {
-						if (localName.equalsIgnoreCase(remoteName)) {
-							Object srcValue = srcField.get(src);
-							targetField.set(target, srcValue);
-						}
+
+				if (localName != null && remoteName != null) {
+					if (localName.equalsIgnoreCase(remoteName)) {
+						Object srcValue = srcField.get(src);
+						targetField.set(target, srcValue);
 					}
 				}
 			}
