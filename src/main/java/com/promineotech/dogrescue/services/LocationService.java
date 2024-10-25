@@ -27,15 +27,14 @@ public class LocationService {
 		try {
 			Location location = findOrCreateLocation(locationData);
 			if (location == null) {
-				location = new Location();
-				location = (Location) mergeData(locationData, location);
+				location = locationData.toLocation();
 				location = locationDao.save(location);
+				locationData = new LocationData(location);
 			} else {
-				Location newLocation = new Location();
-				newLocation = (Location) mergeData(locationData, location);
-				location = locationDao.save(newLocation);
+				locationData = (LocationData) mergeData(location, locationData, "dog");
+				location = locationDao.save(locationData.toLocation());
+				locationData = new LocationData(location);
 			}
-			locationData = (LocationData) mergeData(location, locationData);
 		} catch (Exception e) {
 			throw new NoSuchElementException("Error processing save/update location", e);
 		}
@@ -72,7 +71,7 @@ public class LocationService {
 				throw new NoSuchElementException("No Location existed with the Id : " + locationId);
 			} else {
 				data = new LocationData();
-				return (LocationData) mergeData(location, data);
+				return (LocationData) mergeData(location, data, "dog");
 			}
 		} catch (Exception e) {
 			throw new NoSuchElementException("Error processing location with Id : " + locationId);
@@ -107,7 +106,7 @@ public class LocationService {
 		return locationDao.findAll(Sort.by(Sort.Direction.ASC, "state"));
 	}
 
-	public Object mergeData(Object src, Object target) throws Exception {
+	public Object mergeData(Object src, Object target, String propertyToSkip) throws Exception {
 		Class<?> clazz = src.getClass();
 		for (Field srcField : clazz.getDeclaredFields()) {
 			srcField.setAccessible(true);
@@ -116,10 +115,15 @@ public class LocationService {
 				String localName = srcField.getName();
 				String remoteName = targetField.getName();
 
-				if (localName != null && remoteName != null) {
-					if (localName.equalsIgnoreCase(remoteName)) {
-						Object srcValue = srcField.get(src);
-						targetField.set(target, srcValue);
+				if (!localName.contains(propertyToSkip)) {
+					if (localName != null && remoteName != null) {
+						if (localName.equalsIgnoreCase(remoteName)) {
+							Object srcValue = srcField.get(src);
+							Object targetValue = targetField.get(target);
+							if (targetField.get(target) == null) {
+								targetField.set(target, srcValue);
+							}
+						}
 					}
 				}
 			}
